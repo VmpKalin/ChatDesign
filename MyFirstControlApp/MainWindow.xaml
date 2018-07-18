@@ -6,12 +6,75 @@
         xmlns:views="clr-namespace:MyFirstControlApp.Views"
         xmlns:viewModels="clr-namespace:MyFirstControlApp.ViewModels.Users"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d" Title="MainWindow" MinHeight="600" Width="1080" MinWidth="1000" Foreground="White">
+        mc:Ignorable="d" WindowStyle="None" BorderThickness="1" Title="MainWindow" MinHeight="600" Height="700" Width="1080" MinWidth="1000" Foreground="White" >
     <Window.DataContext>
         <viewModels:MainWindowViewModel/>
     </Window.DataContext>
 
     <Window.Resources>
+
+        <ControlTemplate x:Key="MyButtonTemplate" TargetType="{x:Type Button}">
+            <Border
+                Name="Border"
+                Width="60"
+                Height="60"
+                VerticalAlignment="Center"
+                Background="{x:Null}"
+                BorderBrush="{x:Null}"
+                CornerRadius="3"
+                TextBlock.Foreground="White"
+                TextBlock.FontWeight="Bold">
+                <Grid>
+                    <Rectangle Name="StrokeBorder" Stroke="Black" StrokeThickness="0" StrokeDashArray="1, 1"></Rectangle>
+                    <!--{TemplateBinding Padding} позволяет получить значение свойства Padding
+                    контрола который использует этот шаблон-->
+                    <!--ContentPresenter этот элемент указывает куда нужно помещать содержимое.-->
+                    <ContentPresenter Margin="{TemplateBinding Padding}"></ContentPresenter>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <!--При наведении мыши-->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="Background" Value="White" />
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter TargetName="StrokeBorder" Property="StrokeThickness" Value="3"></Setter>
+                </Trigger>
+                <!--При нажатии-->
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="Border" Property="Background" Value="IndianRed"></Setter>
+                    <Setter TargetName="Border" Property="TextBlock.Foreground" Value="Black"></Setter>
+                </Trigger>
+                <!--Если кнопка отключена-->
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="Border" Property="TextBlock.Foreground" Value="Gray" />
+                    <Setter TargetName="Border" Property="Background" Value="MistyRose" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style TargetType="Button" x:Key="TabMenu">
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="60"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+
+            <!--<Style.Triggers>
+                <Trigger Property="IsFocused" Value="true">
+                    <Setter Property="Background" Value="{x:Null}" />
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="{x:Null}"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Background" Value="{x:Null}" />
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="{x:Null}"/>
+                </Trigger>
+            </Style.Triggers>-->
+        </Style>
+        
         <Style TargetType="ListView">
             <Setter Property="Background" Value="{x:Null}"/>
             <Setter Property="BorderBrush" Value="{x:Null}"/>
@@ -125,20 +188,29 @@
             <materialDesign:PackIcon Kind="Menu" Width="30" Height="30"/>
         </Button>
 
-        <Button Grid.Column="3" x:Name="OpenUsers" Height="40" Width="40" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
-            <materialDesign:PackIcon Kind="Menu" Width="30" Height="30"/>
+        <Button Grid.Column="3" x:Name="OpenUsers" Height="40" Width="40" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
+            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Center" VerticalAlignment="Center" Background="CornflowerBlue" Foreground="White" Width="40" Height="40"/>
         </Button>
 
 
-        <Grid x:Name="ChatUsers" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Grid.Row="0"  Grid.Column="4" Grid.RowSpan="3" Opacity="0" Margin="0 0 -300 0" Width="300" Background="CornflowerBlue">
-            <Grid.RenderTransform>
+        <StackPanel x:Name="ChatUsers" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Grid.Row="0"  Grid.Column="4" Grid.RowSpan="3" Opacity="1" Margin="0 0 -300 0" Width="300" Background="CornflowerBlue">
+            <StackPanel.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
                     <RotateTransform/>
                     <TranslateTransform/>
                 </TransformGroup>
-            </Grid.RenderTransform>
+            </StackPanel.RenderTransform>
+            <StackPanel Orientation="Horizontal" >
+                <Button Content="FAQ" Template="{StaticResource MyButtonTemplate}"/>
+                <Button Content="CONTACT" Template="{StaticResource MyButtonTemplate}"/>
+                <Button Content="ORDER STATUS" Template="{StaticResource MyButtonTemplate}"/>
+                <Button Content="MY ACCOUNT" Template="{StaticResource MyButtonTemplate}"/>
+                <!--<Button Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                    <materialDesign:PackIcon Kind="Power" Foreground="#FFA2A2A2" Width="25" Height="25" />
+                </Button>-->
+            </StackPanel>
             <StackPanel>
                 <Button x:Name="CloseUsers" Height="40" Width="40" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
                     <materialDesign:PackIcon Kind="Close" Width="30" Height="30"/>
@@ -158,7 +230,8 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackPanel>
-        </Grid>
+
+            </StackPanel>
         
         <Grid x:Name="MenuContainer"  RenderTransformOrigin="0.5,0.5" Opacity="0" Grid.Column="0" Grid.RowSpan="3" Margin="-300 0 0 0" Width="300"  HorizontalAlignment="Left" Background="#5e6877">
             <Grid.RenderTransform>
@@ -171,7 +244,7 @@
             </Grid.RenderTransform>
             <StackPanel>
                 <Grid Width="300">
-                    <Image Source="C:\Users\Artur\Desktop\menu_1.jpg"  VerticalAlignment="Top" MaxHeight="150" Width="300" Stretch="Fill"/>
+                    <Image Source="menu_1.jpg"  VerticalAlignment="Top" MaxHeight="150" Width="300" Stretch="Fill"/>
                     <Button x:Name="ButtonCloseMenu" Height="40" Width="40" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" Click="ButtonOpenMenu_OnClick">
                         <materialDesign:PackIcon Kind="Close" Width="30" Height="30"/>
                     </Button>
