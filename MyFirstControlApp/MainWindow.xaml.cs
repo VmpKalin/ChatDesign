@@ -20,9 +20,27 @@ namespace MyFirstControlApp
     /// </summary>
     public partial class MainWindow : Window
     {
+
+
         public MainWindow()
         {
             InitializeComponent();
+            List<MessageTemplate> items = new List<MessageTemplate>();
+            items.Add(new MessageTemplate() { Name = "John Doe",  Message = "John message y" });
+            items.Add(new MessageTemplate() { Name = "Jane Doe", Message = "Fjkda jfk adjskjfjad k" });
+            items.Add(new MessageTemplate() { Name = "Sammy Doe", Message = "Jfadsjkadsfiodio faid jof odof " });
+            items.Add(new MessageTemplate() { Name = "Jane Doe", Message = "Fjkda jfk adjskjfjad k" });
+            items.Add(new MessageTemplate() { Name = "Sammy Doe", Message = "Jfadsjkadsfiodio faid jof odof " });
+            items.Add(new MessageTemplate() { Name = "Jane Doe", Message = "Fjkda jfk adjskjfjad k" });
+            items.Add(new MessageTemplate() { Name = "Sammy Doe", Message = "Jfadsjkadsfiodio faid jof odof " });
+            items.Add(new MessageTemplate() { Name = "Jane Doe", Message = "Fjkda jfk adjskjfjad k" });
+            items.Add(new MessageTemplate() { Name = "Sammy Doe", Message = "Jfadsjkadsfiodio faid jof odof " });
+            //List.ItemsSource = items;
+        }
+
+        private void ButtonOpenMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void ButtonPopupExit_OnClick(object sender, RoutedEventArgs e)
@@ -30,25 +48,39 @@ namespace MyFirstControlApp
             //var result = MessageBox.Show("Are u sure?", "Exit", MessageBoxButton.YesNo);
 
             //if (result == MessageBoxResult.Yes)
-                Application.Current.Shutdown();
-            
+            Application.Current.Shutdown();
+
             //e.Handled = true;
         }
 
-        private void ButtonCloseMenu_OnClick(object sender, RoutedEventArgs e)
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ButtonOpenMenu.Visibility = Visibility.Visible;
-            ButtonCloseMenu.Visibility = Visibility.Collapsed;
-            GridMenu.Visibility = Visibility.Collapsed;
-            GridChat.Visibility = Visibility.Visible;
+
         }
 
-        private void ButtonOpenMenu_OnClick(object sender, RoutedEventArgs e)
-        {
-            GridMenu.Visibility = Visibility.Visible;
-            GridChat.Visibility = Visibility.Collapsed;
-            ButtonOpenMenu.Visibility = Visibility.Collapsed;
-            ButtonCloseMenu.Visibility = Visibility.Visible;
-        }
+        //private void ButtonCloseMenu_OnClick(object sender, RoutedEventArgs e)
+        //{
+        //    ButtonOpenMenu.Visibility = Visibility.Visible;
+        //    ButtonCloseMenu.Visibility = Visibility.Collapsed;
+        //    GridMenu.Visibility = Visibility.Collapsed;
+        //    GridChat.Visibility = Visibility.Visible;
+        //}
+
+        //private void ButtonOpenMenu_OnClick(object sender, RoutedEventArgs e)
+        //{
+        //    GridMenu.Visibility = Visibility.Visible;
+        //    GridChat.Visibility = Visibility.Collapsed;
+        //    ButtonOpenMenu.Visibility = Visibility.Collapsed;
+        //    ButtonCloseMenu.Visibility = Visibility.Visible;
+        //}
+
+
+    }
+
+    public class MessageTemplate
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -3,34 +3,303 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MyFirstControlApp"
+        xmlns:views="clr-namespace:MyFirstControlApp.Views"
+        xmlns:viewModels="clr-namespace:MyFirstControlApp.ViewModels.Users"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d" Title="MainWindow" Height="600" Width="1080" Foreground="White">
+        mc:Ignorable="d" Title="MainWindow" MinHeight="600" Width="1080" MinWidth="1000" Foreground="White">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel/>
+    </Window.DataContext>
+
     <Window.Resources>
+        <Style TargetType="ListView">
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="AliceBlue"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Width" Value="300"/>
+            <Setter Property="FontFamily" Value="Champagne &amp; Limousines"/>
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#9449b0"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#9449b0"/>
+            </Style.Resources>
+        </Style>
+        <Style TargetType="ListViewItem">
+            <Setter Property="MaxWidth" Value="300"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Padding" Value="10 0 10 0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True" >
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="LightBlue"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True" >
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="FontSize" Value="16"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True" >
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="LightBlue"/>
+                </Trigger>
+            </Style.Triggers>
+            
+        </Style>
         
-        <!--<Storyboard x:Key="OpenMenu">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
-                <EasingDoubleKeyFrame Value="250"/>
-                <EasingDoubleKeyFrame Value="0"/>
+    
+    <Storyboard x:Key="CloseMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="MenuContainer">
+                <EasingDoubleKeyFrame KeyTime="0" Value="300"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="MenuContainer">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Key="CloseMenu">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
-                <EasingDoubleKeyFrame  Value="0"/>
-                <EasingDoubleKeyFrame  Value="250"/>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>-->
+    <Storyboard x:Key="OpenMenu">
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="MenuContainer">
+            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="300"/>
+        </DoubleAnimationUsingKeyFrames>
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="MenuContainer">
+            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+        </DoubleAnimationUsingKeyFrames>
+        
+    </Storyboard>
+    <Storyboard x:Key="OpenUsers">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="ChatUsers">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="-300"/>
+        </DoubleAnimationUsingKeyFrames>
+        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ChatUsers">
+            <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+            <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+        </DoubleAnimationUsingKeyFrames>
+    </Storyboard>
+
+        <!--<DataTemplate x:Name="homeTemplate" DataType="{x:Type viewModels:ChatPageViewModel}">
+        <views:Chat DataContext="{Binding}"/>
+    </DataTemplate>
+
+    <DataTemplate x:Name="settingsTemplate" DataType="{x:Type viewModels:SettingsViewModel}">
+        <views:Settings DataContext="{Binding}"/>
+    </DataTemplate>-->
+
     </Window.Resources>
-    <!--<Window.Triggers>
+
+    <Window.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
             <BeginStoryboard Storyboard="{StaticResource OpenMenu}"/>
         </EventTrigger>
+        
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
             <BeginStoryboard Storyboard="{StaticResource CloseMenu}"/>
         </EventTrigger>
-    </Window.Triggers>-->
+
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="OpenUsers">
+            <BeginStoryboard Storyboard="{StaticResource OpenUsers}"/>
+        </EventTrigger>
+        
+    </Window.Triggers>
+
     <Grid Background="LightGray">
-        <Grid Height="70" VerticalAlignment="Top" Background="#3474db" >
+
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60"></ColumnDefinition>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Button x:Name="ButtonOpenMenu" Height="40" Width="40" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
+            <materialDesign:PackIcon Kind="Menu" Width="30" Height="30"/>
+        </Button>
+
+        <Button Grid.Column="3" x:Name="OpenUsers" Height="40" Width="40" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
+            <materialDesign:PackIcon Kind="Menu" Width="30" Height="30"/>
+        </Button>
+
+
+        <Grid x:Name="ChatUsers" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Grid.Row="0"  Grid.Column="4" Grid.RowSpan="3" Opacity="0" Margin="0 0 -300 0" Width="300" Background="CornflowerBlue">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <StackPanel>
+                <Button x:Name="CloseUsers" Height="40" Width="40" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
+                    <materialDesign:PackIcon Kind="Close" Width="30" Height="30"/>
+                </Button>
+                <ListView ItemsSource="{Binding Path=People}" Padding="5 10 5 10" VerticalAlignment="Center" SelectionChanged="ListView_SelectionChanged">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Account" Height="30" Width="30" Margin="0 5 15 5"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding FirstName, StringFormat={}{0} }" />
+                                    <TextBlock Text="{Binding LastName}" />
+                                </StackPanel>
+                                <TextBlock Text="User message..." />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </Grid>
+        
+        <Grid x:Name="MenuContainer"  RenderTransformOrigin="0.5,0.5" Opacity="0" Grid.Column="0" Grid.RowSpan="3" Margin="-300 0 0 0" Width="300"  HorizontalAlignment="Left" Background="#5e6877">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <StackPanel>
+                <Grid Width="300">
+                    <Image Source="C:\Users\Artur\Desktop\menu_1.jpg"  VerticalAlignment="Top" MaxHeight="150" Width="300" Stretch="Fill"/>
+                    <Button x:Name="ButtonCloseMenu" Height="40" Width="40" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" Click="ButtonOpenMenu_OnClick">
+                        <materialDesign:PackIcon Kind="Close" Width="30" Height="30"/>
+                    </Button>
+                </Grid>
+                <ListView Padding="0 10 0 0" >
+                    <ListViewItem Tag="Chat" IsSelected="True">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="MessageText" Height="30" Width="30" Margin="0 5 15 5"/>
+                            <TextBlock Text="All Chats" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Tag="Settings">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="Contacts" Height="30" Width="30" Margin="0 5 15 5"/>
+                            <TextBlock Text="My Friends" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Settings" Height="30" Width="30" Margin="0 5 15 5"/>
+                            <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+            </StackPanel>
+
+            
+
+            <!--<StackPanel>
+                <Grid Height="70" Background="{x:Null}" RenderTransformOrigin="0.5,0.5">
+                   
+                    <Button x:Name="ButtonOpenMenu" Height="30" Width="30" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" Click="ButtonOpenMenu_OnClick">
+                        <materialDesign:PackIcon Kind="Menu" Width="25" Height="25"/>
+                    </Button>
+                    <Button x:Name="ButtonCloseMenu" Visibility="Collapsed" Height="30" Width="30" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" Click="ButtonCloseMenu_OnClick">
+                        <materialDesign:PackIcon Kind="AccountBoxOutline" Width="25" Height="25"/>
+                    </Button>
+                    <TextBox x:Name="Search" Background="AliceBlue" Height="30" Padding="5"  FontSize="15" Width="190" Margin="5" HorizontalAlignment="Left">
+                        <TextBox.Resources>
+                            <Border x:Key="BorderRadius" Background="LightBlue" 
+                                    BorderBrush="Black" 
+                                    BorderThickness="2" 
+                                    CornerRadius="5"/>
+                        </TextBox.Resources>
+                    </TextBox>
+                </Grid>
+                <Grid x:Name="GridMenu" Margin="-250 0 0 0"  HorizontalAlignment="Left" Width="250"  RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <StackPanel>
+                        <Label Margin="5 20 5 0" Height="50" Content="Menu" FontSize="30" Foreground="AliceBlue" FontStyle="Italic" HorizontalAlignment="Center"/>
+                        <ListView>
+                            <ListViewItem IsSelected="True">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="MessageText" Height="30" Width="30" Margin="0 5 15 5"/>
+                                    <TextBlock Text="All Chats" VerticalAlignment="Center" FontSize="15"/>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon  Kind="Contacts" Height="30" Width="30" Margin="0 5 15 5"/>
+                                    <TextBlock Text="My Friends" VerticalAlignment="Center" FontSize="15"/>
+                                </StackPanel>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="Settings" Height="30" Width="30" Margin="0 5 15 5"/>
+                                    <TextBlock Text="Settings" VerticalAlignment="Center" FontSize="15"/>
+                                </StackPanel>
+                            </ListViewItem>
+                        </ListView>
+                    </StackPanel>
+                </Grid>
+                <Grid x:Name="GridChat" Width="250" HorizontalAlignment="Left">
+                    <StackPanel>
+                        <ListView x:Name="List">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="YinYang" Height="50" Width="50" Margin="5"/>
+                                        <StackPanel Width="180">
+                                            <TextBlock x:Name="UserName" Text="{Binding Name}" HorizontalAlignment= "Left" Margin="6" VerticalAlignment="Top" FontSize="15"/>
+                                            <TextBlock x:Name="Message" Text="{Binding Message}" HorizontalAlignment = "Left" Margin=" 0 0 10 0" VerticalAlignment="Bottom" FontSize="15"/>
+                                        </StackPanel>
+                                        <Separator/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                            --><!--<ListViewItem Height="60">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="YinYang" Height="50" Width="50" Margin="5"/>
+                                    <StackPanel Width="180">
+                                        <TextBlock Text="Chat Name" HorizontalAlignment= "Left" Margin="6" VerticalAlignment="Top" FontSize="15"/>
+                                        <TextBlock Text="Last user message..." HorizontalAlignment = "Left" VerticalAlignment="Bottom" FontSize="15"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ListViewItem>--><!--
+                        </ListView>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>-->
+        </Grid>
+        
+        
+        
+        
+        <!--DataContext="{Binding Source={StaticResource Home}}"-->
+        <!--<Grid Grid.Row="1" Grid.Column="1">-->
+            <!--<local:HomeView/>-->
+            <!--<DocumentViewer Background="{Binding Source={StaticResource Home}}"/>-->
+            <!--<ContentControl Content="{Binding Source={StaticResource Home}}"/>-->
+        <!--</Grid>-->
+        <!--<Button Content="ButtonAction" HorizontalAlignment="Left" Margin="695,223,0,0" VerticalAlignment="Top" Width="138" Height="50"/>
+        <TextBlock x:Name="ChangingText" HorizontalAlignment="Left" Margin="469,257,0,0" TextWrapping="Wrap" Text="Text that changing" VerticalAlignment="Top"/>
+        <TextBox x:Name="TextChanger" HorizontalAlignment="Left" Height="22" Margin="469,223,0,0" TextWrapping="Wrap" Text="My text" VerticalAlignment="Top" Width="120"/>-->
+        
+    </Grid>
+</Window>
+
+
+<!--<Grid x:Name="TopPanel" Grid.ColumnSpan="2" Grid.Row="0" Height="70" VerticalAlignment="Top" Background="#3474db" >
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" FontFamily="Italy" Text="First App on WPF"/>
             <materialDesign:PopupBox HorizontalAlignment="Right" VerticalAlignment="Center" BorderBrush="Black" BorderThickness="2"  Margin="0,20,9,24" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                 <StackPanel Width="150" Background="DarkTurquoise" Opacity="0.7" >
@@ -54,83 +323,5 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-            </materialDesign:PopupBox>
-        </Grid>
-
-        <Grid x:Name="MenuConteiner" Width="250" HorizontalAlignment="Left" Background="#5e6877">
-
-            <StackPanel>
-                <Grid Height="70" Background="{x:Null}" RenderTransformOrigin="0.5,0.5">
-                    <Grid.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </Grid.RenderTransform>
-                    <Button x:Name="ButtonOpenMenu" Height="30" Width="30" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" Click="ButtonOpenMenu_OnClick">
-                        <materialDesign:PackIcon Kind="Menu" Width="25" Height="25"/>
-                    </Button>
-                    <Button x:Name="ButtonCloseMenu" Visibility="Collapsed" Height="30" Width="30" Margin="10" HorizontalAlignment="Right" VerticalAlignment="Center"  Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E" Click="ButtonCloseMenu_OnClick">
-                        <materialDesign:PackIcon Kind="AccountBoxOutline" Width="25" Height="25"/>
-                    </Button>
-                    <TextBox x:Name="Search" Background="AliceBlue" Height="30" Padding="5"  FontSize="15" Width="190" Margin="5" HorizontalAlignment="Left">
-                        <TextBox.Resources>
-                            <Border x:Key="BorderRadius" Background="LightBlue" 
-                                    BorderBrush="Black" 
-                                    BorderThickness="2" 
-                                    CornerRadius="5"/>
-                        </TextBox.Resources>      
-                    </TextBox>
-                </Grid>
-                <Grid x:Name="GridMenu" HorizontalAlignment="Left" Width="250" Visibility="Collapsed">
-                    <StackPanel>
-                        <Label Margin="5 20 5 0" Height="50" Content="Menu" FontSize="30" Foreground="AliceBlue" FontStyle="Italic" HorizontalAlignment="Center"/>
-                        <ListView Background="{x:Null}" BorderBrush="{x:Null}" Foreground="AliceBlue" Margin="5" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <ListViewItem Height="60">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="MessageText" Height="30" Width="30" Margin="0 5 15 5"/>
-                                    <TextBlock Text="All Chats" VerticalAlignment="Center" FontSize="15"/>
-                                </StackPanel>
-                            </ListViewItem>
-                            <ListViewItem Height="60">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon  Kind="Contacts" Height="30" Width="30" Margin="0 5 15 5"/>
-                                    <TextBlock Text="My Friends" VerticalAlignment="Center" FontSize="15"/>
-                                </StackPanel>
-                            </ListViewItem>
-                            <ListViewItem Height="60">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="Settings" Height="30" Width="30" Margin="0 5 15 5"/>
-                                    <TextBlock Text="Settings" VerticalAlignment="Center" FontSize="15"/>
-                                </StackPanel>
-                            </ListViewItem>
-                        </ListView>
-                    </StackPanel>
-                </Grid>
-                <Grid x:Name="GridChat" Width="250" HorizontalAlignment="Left">
-                    <StackPanel>
-                        <ListView Background="{x:Null}" BorderBrush="{x:Null}" Foreground="AliceBlue" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <ListViewItem Height="60">
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="YinYang" Height="50" Width="50" Margin="5"/>
-                                    <StackPanel Width="180">
-                                        <TextBlock Text="Chat Name" HorizontalAlignment= "Left" Margin="6" VerticalAlignment="Top" FontSize="15"/>
-                                        <TextBlock Text="Last user message..." HorizontalAlignment = "Left" VerticalAlignment="Bottom" FontSize="15"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </ListViewItem>
-                            <Separator/>
-                        </ListView>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </Grid>
-
-        
-
-        
-    </Grid>
-</Window>
-
+            </materialDesign:PopupBox>-->
+<!--</Grid>-->
